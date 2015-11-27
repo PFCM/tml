@@ -26,8 +26,8 @@ MODEL_PATH = "./models/"
 
 def train_and_sample(data):
     conf = charmodel.get_config()
-    conf.hidden_size = 512#test
-    conf.num_layers = 1
+    conf.hidden_size = 512
+    conf.num_layers = 2
     conf.batch_size=4
     conf.max_max_epochs = 25
     train_data = charmodel.reader.tweets_to_sequence(data)
