@@ -1,0 +1,10 @@
+# any emacs backups
+*~
+# bytecode
+*.pyc
+# os x/ pyenv 
+.DS_Store
+.python-version
+
+# the startup script doesn't need to go in the repo
+startup.bash
