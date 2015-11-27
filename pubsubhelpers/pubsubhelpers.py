@@ -86,3 +86,20 @@ def pull_pubsub_messages(client, subscription, topic):
     # should have some stuff to play with
     logging.info('got {} messages'.format(len(msgs)))
     return msgs
+
+def post_pubsub_messages(topic, messages):
+    """Posts messages to topic. Expects messages to be a list of strings
+    and assumes topic exists"""
+    client = create_default_client()
+    # make a body (this is POST)
+    body = {
+        'messages': [
+            {'data': base64.b64encode(m)} for m in messages
+            ]
+        }
+    resp = client.projects().topics().publish(
+        topic=topic, body=body).execute()
+    logging.debug(resp)
+    logging.info("Tried to publish {} messages to {}, did not check response".format(
+            len(messages), topic))
+    

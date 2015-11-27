@@ -25,31 +25,45 @@ import codecs
 MODEL_PATH = "./models/"
 
 def train_and_sample(data):
+    # if data is none, just gen samples
     conf = charmodel.get_config()
     conf.hidden_size = 512
-    conf.num_layers = 2
-    conf.batch_size=4
-    conf.max_max_epochs = 25
-    train_data = charmodel.reader.tweets_to_sequence(data)
+    conf.num_layers = 1 
+    conf.batch_size = 8
+    conf.max_max_epoch = 4 if data else 0
+    train_data = charmodel.reader.tweets_to_sequence(data) if data else []
     #print(charmodel.reader.get_vocab())
     
     return charmodel.train_and_sample(train_data, 
                                       conf,
                                       MODEL_PATH,
-                                      charmodel.reader.get_vocab())
+                                      charmodel.reader.get_vocab(),
+                                      sample_length=500)
 
 def main():
-    #logging.info('firing up')
-    #new_tweets = pubsubhelpers.pull_pubsub_messages(
-    #    pubsubhelpers.create_default_client(),
-    #    'projects/twittest-1140/subscriptions/get_data',
-    #    'projects/twittest-1140/topics/new_data')
-    with codecs.open("bootstrap_data.txt", "r", "utf-8", errors='ignore') as f:
-        tweets = list(f.read())
-    
+    logging.info('firing up')
+    new_tweets = pubsubhelpers.pull_pubsub_messages(
+        pubsubhelpers.create_default_client(),
+        'projects/twittest-1140/subscriptions/get_data',
+        'projects/twittest-1140/topics/new_data')
+    if len(new_tweets) > 0:
+        tweets = list(u"\n".join(new_tweets))
+        #with codecs.open("bootstrap_data.txt", "r", "utf-8", errors='ignore') as f:
+        #tweets = list(f.read())
+    else:
+        tweets = None
 
     sample = train_and_sample(tweets)
-    print(sample)
+    
+    samples = sample.split(u"\n")
+    # clip them to 140 chars jic
+    for i,s in enumerate(samples):
+        if len(s) > 140:
+            samples[i] =  s[:140]
+#    for s in samples:
+#        print(s, len(s))
+    pubsubhelpers.post_pubsub_messages('projects/twittest-1140/topics/new_tweet',
+                                       samples)
 
 if __name__ == '__main__':
     main()
