@@ -8,3 +8,6 @@
 
 # the startup script doesn't need to go in the repo
 startup.bash
+
+# models, for now
+models/

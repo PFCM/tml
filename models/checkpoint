@@ -1,2 +1,0 @@
-model_checkpoint_path: "./models/512x1.chkpt"
-all_model_checkpoint_paths: "./models/512x1.chkpt"
