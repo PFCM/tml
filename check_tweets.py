@@ -53,8 +53,8 @@ def main():
     else:
         tweets = None
 
-    sample = train_and_sample(tweets)
-    
+    sample = unicode(train_and_sample(tweets))
+    print(type(sample))
     samples = sample.split(u"\n")
     # clip them to 140 chars jic
     for i,s in enumerate(samples):

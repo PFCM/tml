@@ -94,7 +94,7 @@ def post_pubsub_messages(topic, messages):
     # make a body (this is POST)
     body = {
         'messages': [
-            {'data': base64.b64encode(m)} for m in messages
+            {'data': base64.b64encode(m.encode("utf-8"))} for m in messages
             ]
         }
     resp = client.projects().topics().publish(
