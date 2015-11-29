@@ -227,7 +227,9 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
             else:
                 model_file = model_dir + "{}x{}.chkpt".format(config.hidden_size,
                                                               config.num_layers)
-                                                        
+        else:
+            model_file = model_dir + "{}x{}.chkpt".format(config.hidden_size,
+                                                          config.num_layers)
 
         if not done_init:
             logging.info("initialising weights randomly")
