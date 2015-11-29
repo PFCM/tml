@@ -10,7 +10,7 @@
 
 import logging
 import datetime
-LOGFILE = 'log-{}'.format(datetime.datetime.now())
+LOGFILE = 'log'
 logging.basicConfig(filename=LOGFILE,
                     level=logging.DEBUG)
 import base64
