@@ -225,10 +225,10 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
                 done_init = True
                 logging.info("succesfully initialised from file")
             else:
-                model_file = model_dir + "{}x{}.chkpt".format(config.hidden_size,
+                model_file = model_dir + "/{}x{}.chkpt".format(config.hidden_size,
                                                               config.num_layers)
         else:
-            model_file = model_dir + "{}x{}.chkpt".format(config.hidden_size,
+            model_file = model_dir + "/{}x{}.chkpt".format(config.hidden_size,
                                                           config.num_layers)
 
         if not done_init:
