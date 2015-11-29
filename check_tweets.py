@@ -9,7 +9,10 @@
 #from __future__ import unicode_literals
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
+import datetime
+LOGFILE = 'log-{}'.format(datetime.datetime.now())
+logging.basicConfig(filename=LOGFILE,
+                    level=logging.DEBUG)
 import base64
 import sys
 
