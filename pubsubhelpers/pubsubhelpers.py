@@ -12,6 +12,7 @@ import sys
 from oauth2client import client as oauth2client
 from apiclient import discovery
 import httplib2
+import HTMLParser
 
 def create_default_client(scopes=['https://www.googleapis.com/auth/pubsub']):
     """Attempts to create a default client. The scopes argument may not be required.
@@ -62,6 +63,7 @@ def pull_pubsub_messages(client, subscription, topic):
         }
     queueEmpty = False
     msgs = []
+    h = HTMLParser.HTMLParser()
     logging.info('checking messages')
     while not queueEmpty:
         resp = client.projects().subscriptions().pull(
@@ -73,8 +75,10 @@ def pull_pubsub_messages(client, subscription, topic):
             for received_message in received_messages:
                 pubsub_message = received_message.get('message')
                 if pubsub_message:
-                    msgs.append(base64.b64decode(
-                                pubsub_message.get('data')))
+                    msg = base64.b64decode(pubsub_message.get('data')).decode('utf-8')
+                    msg = h.unescape(msg)
+                    print(type(msg),msg)
+                    msgs.append(msg)
                     ack_ids.append(received_message.get('ackId'))
             ack_body = {'ackIds':ack_ids}
             client.projects().subscriptions().acknowledge(
@@ -94,7 +98,7 @@ def post_pubsub_messages(topic, messages):
     # make a body (this is POST)
     body = {
         'messages': [
-            {'data': base64.b64encode(m.encode("utf-8"))} for m in messages
+            {'data': base64.b64encode(m.encode("utf-8"))} for m in messages if len(m) > 0
             ]
         }
     resp = client.projects().topics().publish(

@@ -67,6 +67,8 @@ def main():
 #        print(s, len(s))
     pubsubhelpers.post_pubsub_messages('projects/twittest-1140/topics/new_tweet',
                                        samples)
+    # byeee
+    pubsubhelpers.post_pubsub_messages('projects/twittest-1140/topics/turnmeoff')
 
 if __name__ == '__main__':
     main()
