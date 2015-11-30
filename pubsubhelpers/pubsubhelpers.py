@@ -69,7 +69,7 @@ def pull_pubsub_messages(client, subscription, topic, tries=1, wait=5):
     msgs = []
     h = HTMLParser.HTMLParser()
     logging.info('checking messages')
-    for t in range(max_tries):
+    for t in range(tries):
         while not queueEmpty:
             resp = client.projects().subscriptions().pull(
                 subscription=subscription, body=body).execute()
