@@ -11,3 +11,6 @@ startup.bash
 
 # models, for now
 models/
+
+# also logs
+log*

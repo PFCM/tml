@@ -33,7 +33,7 @@ def train_and_sample(data):
     conf.hidden_size = 512
     conf.num_layers = 1 
     conf.batch_size = 8
-    conf.max_max_epoch = 4 if data else 0
+    conf.max_max_epoch = 2 if data else 0
     train_data = charmodel.reader.tweets_to_sequence(data) if data else []
     #print(charmodel.reader.get_vocab())
     
@@ -69,6 +69,8 @@ def main():
 #        print(s, len(s))
     pubsubhelpers.post_pubsub_messages('projects/twittest-1140/topics/new_tweet',
                                        samples)
+    # byeee
+    pubsubhelpers.post_pubsub_messages('projects/twittest-1140/topics/turnmeoff',['instance-1'])
 
 if __name__ == '__main__':
     main()
