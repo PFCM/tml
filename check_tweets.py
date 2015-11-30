@@ -48,7 +48,9 @@ def main():
     new_tweets = pubsubhelpers.pull_pubsub_messages(
         pubsubhelpers.create_default_client(),
         'projects/twittest-1140/subscriptions/get_data',
-        'projects/twittest-1140/topics/new_data')
+        'projects/twittest-1140/topics/new_data',
+        tries=3,
+        wait=20)
     if len(new_tweets) > 0:
         tweets = list(u"\n".join(new_tweets))
         #with codecs.open("bootstrap_data.txt", "r", "utf-8", errors='ignore') as f:

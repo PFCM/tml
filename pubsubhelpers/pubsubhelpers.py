@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 import logging
 import base64
 import sys
+import time
 
 from oauth2client import client as oauth2client
 from apiclient import discovery
@@ -52,8 +53,11 @@ def check_pubsub_subscription(client, sub_name, topic_name,
     return True
 
 
-def pull_pubsub_messages(client, subscription, topic):
-    """Checks if a subscriptions exists, returns messages from it"""
+def pull_pubsub_messages(client, subscription, topic, tries=1, wait=5):
+    """Checks if a subscriptions exists, returns messages from it,
+    If no messages are received, tries a couple of times (if desired),
+    sometimes they can take a while to come through.
+    """
     check_pubsub_subscription(client, subscription, topic)
     batch_size = 100 # who knows how many there will be?
     body = {
@@ -63,26 +67,30 @@ def pull_pubsub_messages(client, subscription, topic):
     queueEmpty = False
     msgs = []
     logging.info('checking messages')
-    while not queueEmpty:
-        resp = client.projects().subscriptions().pull(
-            subscription=subscription, body=body).execute()
-        received_messages = resp.get('receivedMessages')
+    for t in range(max_tries):
+        while not queueEmpty:
+            resp = client.projects().subscriptions().pull(
+                subscription=subscription, body=body).execute()
+            received_messages = resp.get('receivedMessages')
     
-        if received_messages is not None:
-            ack_ids = []
-            for received_message in received_messages:
-                pubsub_message = received_message.get('message')
-                if pubsub_message:
-                    msgs.append(base64.b64decode(
+            if received_messages is not None:
+                ack_ids = []
+                for received_message in received_messages:
+                    pubsub_message = received_message.get('message')
+                    if pubsub_message:
+                        msgs.append(base64.b64decode(
                                 pubsub_message.get('data')))
-                    ack_ids.append(received_message.get('ackId'))
-            ack_body = {'ackIds':ack_ids}
-            client.projects().subscriptions().acknowledge(
-                subscription=subscription, body=ack_body).execute()
-            queueEmpty = len(msgs) < batch_size
-        else:
-            queueEmpty = True
-
+                        ack_ids.append(received_message.get('ackId'))
+                ack_body = {'ackIds':ack_ids}
+                client.projects().subscriptions().acknowledge(
+                    subscription=subscription, body=ack_body).execute()
+                queueEmpty = len(msgs) < batch_size
+            else:
+                queueEmpty = True
+        if len(msgs) != 0:
+            break
+        time.sleep(wait)
+    
     # should have some stuff to play with
     logging.info('got {} messages'.format(len(msgs)))
     return msgs
