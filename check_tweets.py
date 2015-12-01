@@ -9,10 +9,38 @@
 #from __future__ import unicode_literals
 
 import logging
+import logging.config
 import datetime
 LOGFILE = 'log'
-logging.basicConfig(filename=LOGFILE,
-                    level=logging.DEBUG)
+
+# logging config
+logging.config.dictConfig({
+    'version':1,
+    'formatters': {
+        'default': {
+            'format':'%(asctime)s(%(levelname)s) %(filename)s.%(funcName)s:%(message)s',
+            'datefmt':'%Y-%m-%d %H:%M:%S'
+        }
+    },
+    'handlers': {
+        'console': {
+            'class':'logging.StreamHandler',
+            'formatter': 'default',
+            'level':'DEBUG',
+        },
+        'file'   : {
+            'class':'logging.handlers.RotatingFileHandler',
+            'formatter':'default',
+            'level':'DEBUG',
+            'filename':LOGFILE,
+        }
+    },
+    'root':{
+        'level':'DEBUG',
+        'handlers':['console', 'file']
+    }
+})
+
 import base64
 import sys
 
