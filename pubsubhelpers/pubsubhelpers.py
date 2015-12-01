@@ -110,6 +110,9 @@ def post_pubsub_messages(topic, messages):
     resp = client.projects().topics().publish(
         topic=topic, body=body).execute()
     logging.debug(resp)
-    logging.info("Tried to publish {} messages to {}, did not check response".format(
+    if 'error' in resp:
+        logging.error("Had some kind of issue with publishing")
+    else:
+        logging.info("Tried to publish {} messages to {}, did not check response".format(
             len(messages), topic))
     
