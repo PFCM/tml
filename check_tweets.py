@@ -77,7 +77,7 @@ def main():
         pubsubhelpers.create_default_client(),
         'projects/twittest-1140/subscriptions/get_data',
         'projects/twittest-1140/topics/new_data',
-        tries=3,
+        tries=5,
         wait=20)
     if len(new_tweets) > 0:
         tweets = list(u"\n".join(new_tweets))
