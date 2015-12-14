@@ -86,7 +86,7 @@ def main():
     else:
         tweets = None
 
-    sample = unicode(train_and_sample(tweets))
+    sample = unicode(train_and_sample(tweets).replace('&amp;', '&'))
     print(type(sample))
     samples = sample.split(u"\n")
     # clip them to 140 chars jic
