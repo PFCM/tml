@@ -1,7 +1,7 @@
 """
 This is some lstm business, ie. the fun part.
 Goal is to make sure that you can load a model
-from a file, train it a bit and generate a 
+from a file, train it a bit and generate a
 sample.
 """
 
@@ -55,7 +55,7 @@ class CharModel(object):
             lstm_cell = rnn_cell.DropoutWrapper(
                 lstm_cell, output_keep_prob=config.keep_prob)
         cell = rnn_cell.MultiRNNCell([lstm_cell] * config.num_layers)
-        
+
         self._initial_state = cell.zero_state(batch_size, tf.float32)
 
         # do an embedding (always on cpu)
@@ -70,10 +70,10 @@ class CharModel(object):
 
         from tensorflow.models.rnn import rnn
         outputs, states = rnn.rnn(cell, inputs, initial_state=self._initial_state)
-        
+
         # reshape
         outputs = tf.reshape(tf.concat(1, outputs), [-1, size])
-        
+
         logits = tf.nn.xw_plus_b(outputs,
                                  tf.get_variable("softmax_W", [size,vocab_size]),
                                  tf.get_variable("softmax_b", [vocab_size]))
@@ -95,7 +95,9 @@ class CharModel(object):
                                           config.max_grad_norm)
         # actually the simple guy does good
         # with the grad clipping and the lr schedule and whatnot
-        optimizer = tf.train.GradientDescentOptimizer(self.lr)
+#ftrl?
+        #optimizer = tf.train.GradientDescentOptimizer(self.lr)
+        optimizer = tf.train.FtrlOptimizer(self.lr)
         self._train_op = optimizer.apply_gradients(zip(grads, tvars))
 
     def assign_lr(self, session, lr_value):
@@ -124,7 +126,7 @@ class CharModel(object):
     @property
     def final_state(self):
         return self._final_state
-    
+
     @property
     def lr(self):
         return self._lr
@@ -189,14 +191,14 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
     Then trains for a while on the data.
     Then generates a sample sequence.
     Then saves the model to file."""
-    
+
     # irl, first we need to copy the config
     from copy import copy
     sample_conf = copy(config)
     sample_conf.batch_size = 1
     sample_conf.num_steps = 1
     sample_conf.vocab_size = config.vocab_size = len(vocab)
-    
+
     # then we need to flip the vocab dict
     idx2wrd = dict([(y,x) for x,y in vocab.iteritems()])
 
@@ -245,7 +247,7 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
                         session.run(mtrain.lr)))
                 logging.info(u"sneak peek: {}".format(sample_sequence(
                             session, msample, 100, idx2wrd, start=vocab[u'\n'])))
-                
+
                 train_perplexity = _run_epoch(session,
                                               mtrain,
                                               data,
@@ -253,7 +255,7 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
                                               verbose=True)
                 logging.info("{}    train perplexity: {:.3f}".format(
                         i+1, train_perplexity))
-                        
+
                 if (i+1) % 2 == 0 or i == config.max_max_epoch-1:
                     path = save.save(session, model_file)
                     logging.info("{}    saved model at: {}".format(i+1,path))
@@ -264,4 +266,3 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
         logging.info(u"Final sample: {}".format(sample))
         save.save(session, model_file)
         return sample
-                                 
