@@ -59,9 +59,9 @@ def train_and_sample(data):
     # if data is none, just gen samples
     conf = charmodel.get_config()
     conf.hidden_size = 512
-    conf.num_layers = 2
+    conf.num_layers = 1
     conf.batch_size = 8
-    conf.max_max_epoch = 2 if data else 0
+    conf.max_max_epoch = 3 if data else 0
     train_data = charmodel.reader.tweets_to_sequence(data) if data else []
     #print(charmodel.reader.get_vocab())
 

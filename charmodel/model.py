@@ -24,7 +24,7 @@ class Config(object):
     """it's nice to have these things in one place"""
     def __init__(self):
         self.init_scale = 0.1 # only matters the first time
-        self.learning_rate = 1.0 # probably want to turn it down subsequently
+        self.learning_rate = 0.75 # probably want to turn it down subsequently
         self.max_grad_norm = 5 # seems ok
         self.num_layers = 2 # did ok before
         self.hidden_size = 128 # not a bad tradeoff
