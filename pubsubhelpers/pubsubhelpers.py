@@ -25,7 +25,7 @@ def create_default_client(scopes=['https://www.googleapis.com/auth/pubsub']):
     credentials.authorize(http)
     return discovery.build('pubsub', 'v1', http=http)
 
-def check_pubsub_subscription(client, sub_name, topic_name, 
+def check_pubsub_subscription(client, sub_name, topic_name,
                               create=True):
     """double checks subscriptions exists"""
 
@@ -92,6 +92,7 @@ def pull_pubsub_messages(client, subscription, topic, tries=1, wait=5):
                 queueEmpty = True
         if len(msgs) != 0: # if we've got something, good
             break
+        logging.info('waiting for %s', wait)
         time.sleep(wait)
     # should have some stuff to play with
     logging.info('got {} messages'.format(len(msgs)))
@@ -115,4 +116,3 @@ def post_pubsub_messages(topic, messages):
     else:
         logging.info("Tried to publish {} messages to {}, did not check response".format(
             len(messages), topic))
-    

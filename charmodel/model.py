@@ -212,7 +212,9 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
         with tf.variable_scope("model", reuse=True, initializer=initializer):
             msample = CharModel(is_training=False, config=sample_conf)
 
-        save = tf.train.Saver() # default is save the lot
+        save = tf.train.Saver(dict(
+            [(var.name,var) for var in tf.trainable_variables()]
+        )) # we only care about the trainable ones
         # now let's see if we can restore
         done_init = False
         if os.path.exists(model_dir):
