@@ -59,8 +59,8 @@ def train_and_sample(data):
     # if data is none, just gen samples
     conf = charmodel.get_config()
     conf.hidden_size = 512
-    conf.num_layers = 1
-    conf.batch_size = 8
+    conf.num_layers = 2
+    conf.batch_size = 16
     conf.max_max_epoch = 2 if data else 0
     train_data = charmodel.reader.tweets_to_sequence(data) if data else []
     #print(charmodel.reader.get_vocab())
@@ -78,7 +78,7 @@ def main():
         'projects/twittest-1140/subscriptions/get_data',
         'projects/twittest-1140/topics/new_data',
         tries=5,
-        wait=20)
+        wait=600)
     if len(new_tweets) > 0:
         tweets = list(u"\n".join(new_tweets))
         #with codecs.open("bootstrap_data.txt", "r", "utf-8", errors='ignore') as f:
