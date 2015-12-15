@@ -226,6 +226,9 @@ def train_and_sample(data, config, model_dir,  vocab, sample_length=140):
             if os.path.exists(model_file):
                 logging.info("found latest checkpoint: {}".format(model_file))
                 save.restore(session, model_file)
+                # now we still have to initialise the optimiser
+                # does it work if we just initialise all? Or will it give error
+                tf.initialize_all_variables()
                 done_init = True
                 logging.info("succesfully initialised from file")
             else:
