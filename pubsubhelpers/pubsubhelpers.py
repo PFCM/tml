@@ -81,7 +81,7 @@ def pull_pubsub_messages(client, subscription, topic, tries=1, wait=5):
                     if pubsub_message:
                         msg = base64.b64decode(pubsub_message.get('data')).decode('utf-8')
                         msg = h.unescape(msg)
-                        print(type(msg),msg)
+                        #print(type(msg),msg)
                         msgs.append(msg)
                         ack_ids.append(received_message.get('ackId'))
                 ack_body = {'ackIds':ack_ids}
