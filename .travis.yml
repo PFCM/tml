@@ -9,9 +9,9 @@ services:
 
 before_install:
     - docker build -t pfcm/tml .
-    - docker run pfcm/tml
 
-script: "nosetests"
+script:
+    - docker run pfcm/tml
 
 # if a successful push to master, should rebuild the docker containers
 # and push to gcr.io. However, that's all future stuff atm.
