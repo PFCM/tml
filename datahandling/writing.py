@@ -92,9 +92,13 @@ def write_data_file(data, directory="data", max_files=10, max_lines=5000,
             )
             # account for working directories
             fnames = [os.path.join(directory, name) for name in fnames]
+            fnames.sort() # sort lexically, in case they are created really fast
             # sort by modified time
             fnames.sort(key=os.path.getmtime)
+            # for some reason this doesn't work on linux
+            # perhaps because they are created too quickly?
             # and give the first num_excess the heave-ho
+            print(fnames[:num_excess])
             for old in fnames[:num_excess]:
                 os.remove(old)
     else:
@@ -105,7 +109,6 @@ def write_data_file(data, directory="data", max_files=10, max_lines=5000,
     # the first thing we have to do is iterate the data in chunks
     for i, data_slice in enumerate(_iter_chunk(data, max_lines)):
         fname = _get_name(base=None, num=i if num_files > 1 else -1)
-        print(fname)
         # now actually write it
         lines_written = 0
         fname = os.path.join(directory, fname)

@@ -119,6 +119,8 @@ def test_rollover():
                                 max_lines=1,
                                 name=None)
         assert len(os.listdir(dname)) == 10, "should be 10 files"
+        # just print them for debugging
+        print(os.listdir(dname))
         # now we need to check that the first five were correctly
         # replaced
         # there should be five with an earlier timestamp but a later
