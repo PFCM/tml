@@ -1,12 +1,8 @@
 #! /usr/bin/python
 
-# checks to see if there are new tweets
-# if so, should load them up, clean them and
-# proceed
-
-# if not it should really shut itself down
-
-#from __future__ import unicode_literals
+"""Checks the pub/sub topic to see if there are any new tweets, if so
+writes them to a new file, deleting an older file if there are too many.
+It then loads the model and trains it for a while."""
 
 import logging
 import logging.config
@@ -80,7 +76,8 @@ def main():
         tries=5,
         wait=600)
     if len(new_tweets) > 0:
-        tweets = list(u"\n".join(new_tweets))
+        tweets = [t.replace("\n", "\t")]
+        
         #with codecs.open("bootstrap_data.txt", "r", "utf-8", errors='ignore') as f:
         #tweets = list(f.read())
     else:
