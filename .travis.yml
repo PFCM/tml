@@ -1,0 +1,8 @@
+language: python
+python:
+- "2.7"
+install: "pip install -r requirements.txt"
+script: "nosetests"
+
+# if a successful push to master, should rebuild the docker containers
+# and push to gcr.io. However, that's all future stuff atm.
