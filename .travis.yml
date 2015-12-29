@@ -8,10 +8,17 @@ services:
     - docker
 
 before_install:
+    - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" https://gcr.io
     - docker build -t pfcm/tml .
+    - docker tag pfcm/tml gcr.io/twittest-1140/tml
 
 script:
     - docker run pfcm/tml
 
-# if a successful push to master, should rebuild the docker containers
-# and push to gcr.io. However, that's all future stuff atm.
+# if a successful push to master, push the fresh image to gcr
+deploy:
+    skip_cleanup: true
+    provider: script
+    script: docker push gcr.io/twittest-1140/tml
+    on:
+        branch: master
