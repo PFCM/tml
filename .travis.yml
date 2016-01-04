@@ -1,24 +1,21 @@
 sudo: required
-
 language: python
 python:
-- "2.7"
-
+- '2.7'
 services:
-    - docker
-
+- docker
 before_install:
-    - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" https://gcr.io
-    - docker build -t pfcm/tml .
-    - docker tag pfcm/tml gcr.io/twittest-1140/tml
-
+- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" https://gcr.io
+- docker build -t pfcm/tml .
+- docker tag pfcm/tml gcr.io/twittest-1140/tml
 script:
-    - docker run pfcm/tml
-
-# if a successful push to master, push the fresh image to gcr
+- docker run pfcm/tml
 deploy:
-    skip_cleanup: true
-    provider: script
-    script: docker push gcr.io/twittest-1140/tml
-    on:
-        branch: master
+  skip_cleanup: true
+  provider: script
+  script: docker push gcr.io/twittest-1140/tml
+  on:
+    branch: master
+notifications:
+  slack:
+    secure: HfcDXr/aPhOTmpmQ1yAQp69dq7rLKRrp5SjZgsMiuCD10CvGZUJJyadvVWV5/fth7caMyG7C18pS1so/1dBfpydotk7Tb4a41NtV81hB48H1E/nm8buvwreV24rqMIRaE0x0DrvdAV9q3XQVQnSvDX3VZIRsK+3WrozsR3Ba2rhkMaAKmUG/wctrup0Bea2Oq6k1UUw+eMqW/v8nl7HyDGMpQDbLulyPH+Y0u3BjR72gInznbG9kP6dhhUYeoMARzpAMsoadS+7x8s4EqtFy7NdSkswoDmQ7mX6oL3GmDkFw5xaNBBse72kikc8S3HWA//At3/2ylsQehm4uc/mcd1USB1oNN6CztbfRDgf5Pjm5t1AIHdOhdtBDW65Sk7/3+TI79ICVqx7anPxfd/z7NPlKPd0IwoIlcMaQd1VKnaLO7w8r2gg/NNAIR4pJQeIGck8Ec/kWDOgDmrIsdy7KQSedgICf5PLr1DvanfvAJWbQ5xB3hdJSZeNVJ1PJZ7IACDaQjd4vWfwXXJYAqbcERq8/2CUceH4/c2oa7AYknW6FpHOUqmvlmdlS/Ub9efEpKqtO18oFcw7jNbvP3kyLixXyK4whsiXbHRkyodLTx0dW6IKozSCqY3CbzvemnJ4Wf7rrufVv6uA7LNDTi8/Aeqc87AqO0GS0KboY1YNAmUk=
